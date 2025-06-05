@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const customerRoutes = require("./customerRoutes");
-const menuRoutes = require("./menuRoutes");
-const orderRoutes = require("./orderRoutes");
+const customerRoutes = require("./customer");
+const menuRoutes = require("./menu");
+const orderRoutes = require("./order");
 
 // API Versioning
 router.use("/v1/customer", customerRoutes);
