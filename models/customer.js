@@ -35,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Customer",
-      tableName: "Customers", // make sure this matches your table name in migrations
+      tableName: "Customers",
       timestamps: true,
     }
   );

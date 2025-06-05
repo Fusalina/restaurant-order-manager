@@ -1,25 +1,70 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+
+const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class OrderItem extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
+      OrderItem.belongsTo(models.Order, {
+        foreignKey: "order_id",
+        as: "order",
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      });
+
+      OrderItem.belongsTo(models.MenuItem, {
+        foreignKey: "menu_item_id",
+        as: "menuItem",
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+      });
     }
   }
-  OrderItem.init({
-    order_id: DataTypes.INTEGER,
-    menu_item_id: DataTypes.INTEGER,
-    quantity: DataTypes.INTEGER
-  }, {
-    sequelize,
-    modelName: 'OrderItem',
-  });
+
+  OrderItem.init(
+    {
+      id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      order_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "Orders",
+          key: "id",
+        },
+      },
+      menu_item_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+          model: "MenuItems",
+          key: "id",
+        },
+      },
+      quantity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          min: 1,
+        },
+      },
+      subtotal: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0,
+      },
+    },
+    {
+      sequelize,
+      modelName: "OrderItem",
+      tableName: "OrderItems",
+      timestamps: true,
+    }
+  );
+
   return OrderItem;
 };
