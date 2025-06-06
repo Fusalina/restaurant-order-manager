@@ -1,7 +1,16 @@
 const OrderService = require("../order");
-const { Order, OrderItem, MenuItem, sequelize } = require("../../models");
+const {
+  Customer,
+  Order,
+  OrderItem,
+  MenuItem,
+  sequelize,
+} = require("../../models");
 
 jest.mock("../../models", () => ({
+  Customer: {
+    findByPk: jest.fn(),
+  },
   Order: {
     create: jest.fn(),
   },
@@ -23,6 +32,10 @@ describe("Order Service - createOrder", () => {
   let transaction;
 
   beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  beforeEach(() => {
     transaction = {
       commit: jest.fn(),
       rollback: jest.fn(),
@@ -37,6 +50,11 @@ describe("Order Service - createOrder", () => {
 
   test("it should create an order successfully", async () => {
     const customer_id = 1;
+    Customer.findByPk.mockResolvedValue({
+      id: customer_id,
+      name: "Vanuiri Dengo",
+    });
+
     const items = [
       { menu_item_id: 1, quantity: 2 },
       { menu_item_id: 2, quantity: 1 },
@@ -91,6 +109,11 @@ describe("Order Service - createOrder", () => {
     const customer_id = 1;
     const items = [{ menu_item_id: 999, quantity: 1 }];
 
+    Customer.findByPk.mockResolvedValue({
+      id: customer_id,
+      name: "Vanuiri Dengo",
+    });
+
     Order.create.mockResolvedValue({ id: 1, total: 0, save: jest.fn() });
     MenuItem.findByPk.mockResolvedValue(null);
 
@@ -105,6 +128,10 @@ describe("Order Service - createOrder", () => {
     const customer_id = 1;
     const items = [{ menu_item_id: 1, quantity: 0 }];
 
+    Customer.findByPk.mockResolvedValue({
+      id: customer_id,
+      name: "Vanuiri Dengo",
+    });
     Order.create.mockResolvedValue({ id: 1, total: 0, save: jest.fn() });
     MenuItem.findByPk.mockResolvedValue({ id: 1, price: 10 });
 

@@ -1,10 +1,22 @@
-const { Order, OrderItem, MenuItem, sequelize } = require("../models");
+const {
+  Customer,
+  Order,
+  OrderItem,
+  MenuItem,
+  sequelize,
+} = require("../models");
 
 module.exports = {
   async createOrder(customer_id, items) {
     if (!items || items.length === 0) {
       throw new Error("Items array cannot be empty");
     }
+
+    const customer = await Customer.findByPk(customer_id);
+    if (!customer) {
+      throw new Error(`Customer with id ${customer_id} not found`);
+    }
+
     const transaction = await sequelize.transaction();
     try {
       const order = await Order.create(
@@ -56,6 +68,17 @@ module.exports = {
   },
 
   async updateOrderStatus(order_id, status) {
+    const validStatuses = [
+      "pending",
+      "preparing",
+      "ready",
+      "delivered",
+      "canceled",
+    ];
+    if (!validStatuses.includes(status)) {
+      throw new Error(`Status must be one of: ${validStatuses.join(", ")}`);
+    }
+
     const order = await Order.findByPk(order_id);
 
     if (!order) {
@@ -68,7 +91,37 @@ module.exports = {
     return order;
   },
 
+  async getOrdersByCustomer(customer_id, page = 1, limit = 10) {
+    const offset = (page - 1) * limit;
+    const { rows, count } = await Order.findAndCountAll({
+      where: { customer_id },
+      include: [
+        {
+          model: OrderItem,
+          as: "items",
+          include: [{ model: MenuItem, as: "menuItem" }],
+        },
+      ],
+      limit,
+      offset,
+    });
+
+    return {
+      data: rows,
+      pagination: {
+        total: count,
+        page,
+        limit,
+        pages: Math.ceil(count / limit),
+      },
+    };
+  },
+
   async modifyOrder(order_id, items) {
+    if (!order) {
+      throw new Error("Order not found");
+    }
+
     const transaction = await sequelize.transaction();
     try {
       const order = await Order.findByPk(order_id);
