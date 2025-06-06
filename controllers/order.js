@@ -1,21 +1,15 @@
-const {
-  Order,
-  OrderItem,
-  Customer,
-  MenuItem,
-  sequelize,
-} = require("../models");
+const { Order, OrderItem, MenuItem, sequelize } = require("../models");
 
-const orderService = require("../services/order");
+const OrderService = require("../services/order");
 
 module.exports = {
   async createOrder(req, res) {
     try {
-      const order = await orderService.createOrder(
+      const order = await OrderService.createOrder(
         req.body.customer_id,
         req.body.items
       );
-      console.log(`createOrder: ${order}`);
+      res.status(201).json(order);
     } catch (err) {
       res.status(500).json({ error: error.message });
     }

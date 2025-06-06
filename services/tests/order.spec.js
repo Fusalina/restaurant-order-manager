@@ -1,4 +1,4 @@
-const orderService = require("../order");
+const OrderService = require("../order");
 const { Order, OrderItem, MenuItem, sequelize } = require("../../models");
 
 jest.mock("../../models", () => ({
@@ -60,7 +60,7 @@ describe("Order Service - createOrder", () => {
 
     OrderItem.create.mockImplementation(async (data) => data);
 
-    const result = await orderService.createOrder(customer_id, items);
+    const result = await OrderService.createOrder(customer_id, items);
 
     expect(Order.create).toHaveBeenCalledWith(
       { customer_id, status: "pending", total: 0 },
@@ -80,7 +80,7 @@ describe("Order Service - createOrder", () => {
     const customer_id = 1;
     const items = [];
 
-    await expect(orderService.createOrder(customer_id, items)).rejects.toThrow(
+    await expect(OrderService.createOrder(customer_id, items)).rejects.toThrow(
       "Items array cannot be empty"
     );
 
@@ -94,7 +94,7 @@ describe("Order Service - createOrder", () => {
     Order.create.mockResolvedValue({ id: 1, total: 0, save: jest.fn() });
     MenuItem.findByPk.mockResolvedValue(null);
 
-    await expect(orderService.createOrder(customer_id, items)).rejects.toThrow(
+    await expect(OrderService.createOrder(customer_id, items)).rejects.toThrow(
       "Menu item 999 not found"
     );
 
@@ -108,7 +108,7 @@ describe("Order Service - createOrder", () => {
     Order.create.mockResolvedValue({ id: 1, total: 0, save: jest.fn() });
     MenuItem.findByPk.mockResolvedValue({ id: 1, price: 10 });
 
-    await expect(orderService.createOrder(customer_id, items)).rejects.toThrow(
+    await expect(OrderService.createOrder(customer_id, items)).rejects.toThrow(
       "Quantity for item 1 must be greater than 0"
     );
 
