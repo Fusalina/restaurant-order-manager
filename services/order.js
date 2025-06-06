@@ -118,8 +118,20 @@ module.exports = {
   },
 
   async modifyOrder(order_id, items) {
-    if (!order) {
-      throw new Error("Order not found");
+    if (!Array.isArray(items) || items.length === 0) {
+      throw new Error("Items array must not be empty.");
+    }
+
+    for (const item of items) {
+      if (
+        !item.menu_item_id ||
+        !Number.isInteger(item.quantity) ||
+        item.quantity <= 0
+      ) {
+        throw new Error(
+          `Each item must have a valid menu_item_id and quantity > 0`
+        );
+      }
     }
 
     const transaction = await sequelize.transaction();
@@ -161,8 +173,7 @@ module.exports = {
       await order.save({ transaction });
 
       await transaction.commit();
-
-      return { order, newItems };
+      return { order, items: newItems };
     } catch (error) {
       await transaction.rollback();
       throw error;

@@ -1,5 +1,7 @@
 # Restaurant Order Manager
 
+![Restaurant Order Manager](assets/entities.png)
+
 ## Description
 
 A restaurant order management API that handles customer registration, menu management, and order processing using Node.js, PostgreSQL, and Sequelize.
@@ -102,4 +104,3 @@ npm test
 ```
 
 ---
-
