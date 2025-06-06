@@ -6,47 +6,19 @@ const {
   sequelize,
 } = require("../models");
 
+const orderService = require("../services/order");
+
 module.exports = {
   async createOrder(req, res) {
-    // const transaction = await sequelize.transaction();
-    // try {
-    //   const { customer_id, items } = req.body;
-    //   // items = [{ menu_item_id, quantity }]
-    //   const order = await Order.create(
-    //     { customer_id, status: "pending", total: 0 },
-    //     { transaction }
-    //   );
-    //   let total = 0;
-    //   const orderItems = [];
-    //   for (const item of items) {
-    //     const menuItem = await MenuItem.findByPk(item.menu_item_id);
-    //     if (!menuItem) {
-    //       throw new Error(`Menu item ${item.menu_item_id} not found`);
-    //     }
-    //     const subtotal = menuItem.price * item.quantity;
-    //     total += subtotal;
-    //     const orderItem = await OrderItem.create(
-    //       {
-    //         order_id: order.id,
-    //         menu_item_id: item.menu_item_id,
-    //         quantity: item.quantity,
-    //         subtotal,
-    //       },
-    //       { transaction }
-    //     );
-    //     orderItems.push(orderItem);
-    //   }
-    //   order.total = total;
-    //   await order.save({ transaction });
-    //   await transaction.commit();
-    //   res.status(201).json({
-    //     order,
-    //     items: orderItems,
-    //   });
-    // } catch (error) {
-    //   await transaction.rollback();
-    //   res.status(500).json({ error: error.message });
-    // }
+    try {
+      const order = await orderService.createOrder(
+        req.body.customer_id,
+        req.body.items
+      );
+      console.log(`createOrder: ${order}`);
+    } catch (err) {
+      res.status(500).json({ error: error.message });
+    }
   },
 
   async updateOrderStatus(req, res) {
