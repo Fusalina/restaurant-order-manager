@@ -6,29 +6,29 @@ module.exports = {
       "OrderItems",
       [
         {
-          order_id: 1, // for Rita's order
-          menu_item_id: 1, // Olive Mix (starter)
+          order_id: 1,
+          menu_item_id: 1,
           quantity: 2,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           order_id: 1,
-          menu_item_id: 3, // Chocolate Cake (dessert)
-          quantity: 1,
-          createdAt: new Date(),
-          updatedAt: new Date(),
-        },
-        {
-          order_id: 2, // for Vanessa's order
-          menu_item_id: 2, // Lychee Ceviche (main_course)
+          menu_item_id: 3,
           quantity: 1,
           createdAt: new Date(),
           updatedAt: new Date(),
         },
         {
           order_id: 2,
-          menu_item_id: 4, // Negroni Sbagliato (drink)
+          menu_item_id: 2,
+          quantity: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          order_id: 2,
+          menu_item_id: 4,
           quantity: 1,
           createdAt: new Date(),
           updatedAt: new Date(),

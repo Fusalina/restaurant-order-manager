@@ -99,7 +99,7 @@ describe("MenuService", () => {
       expect(MenuItem.findAndCountAll).toHaveBeenCalledWith({
         where: { category: "starter" },
         limit: 2,
-        offset: 2, // (page 2 - 1) * limit 2 = 2
+        offset: 2,
       });
 
       expect(result).toEqual({
